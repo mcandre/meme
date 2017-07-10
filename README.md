@@ -14,6 +14,10 @@ $ make -f ~/meme/Makefile install package=mcandre/smolbean
 $ make -f ~/.memes/mcandre/smolbean/Makefile pls
 @
 
+$ echo "include ~/.memes/mcandre/smolbean/Makefile" > Makefile
+$ make pls
+@
+
 $ make -f ~/meme/Makefile uninstall package=mcandre/smolbean
 
 $ make -f ~/meme/Makefile version
