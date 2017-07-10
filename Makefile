@@ -10,7 +10,7 @@ ifneq ($(filter %command.com,$(SHELL)),)
 endif
 
 ifneq ($(filter %cmd.exe,$(SHELL)),)
-	SEP=$(SEP_WINDOWSP)
+	SEP=$(SEP_WINDOWS)
 endif
 
 ifneq ($(filter %fish%,$(SHELL)),)
