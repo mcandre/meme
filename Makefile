@@ -5,7 +5,6 @@ SEP_WINDOWS=\\
 
 SEP=$(SEP_UNIX)
 
-
 ifneq ($(filter %command.com,$(SHELL)),)
 	SEP=$(SEP_WINDOWS)
 endif
