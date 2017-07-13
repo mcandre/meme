@@ -27,7 +27,7 @@ $ make -f ~/meme/Makefile version
 # INSTALL (bash-like shells, including bash, zsh, ksh, dash, posh, and fish)
 
 ```console
-$ git clone https://github.com:mcandre/meme.git ~/meme
+$ git clone https://github.com/mcandre/meme.git ~/meme
 ```
 
 ## BSD Note
@@ -47,14 +47,14 @@ $ port install coreutils
 # INSTALL (POSIX shells)
 
 ```console
-$ git clone https://github.com:mcandre/meme.git "$HOME/meme" && \
+$ git clone https://github.com/mcandre/meme.git "$HOME/meme" && \
     mkdir -p "$HOME/.memes"
 ```
 
 # INSTALL (PowerShell)
 
 ```console
-$ git clone https://github.com:mcandre/meme.git ~/meme; `
+$ git clone https://github.com/mcandre/meme.git ~/meme; `
 if ($?) { mkdir -p ~/.memes } `
 if ($?) { reg import ~/meme/cmd-enable-extensions.reg }
 ```
@@ -62,7 +62,7 @@ if ($?) { reg import ~/meme/cmd-enable-extensions.reg }
 # INSTALL (cmd.exe)
 
 ```console
-$ git clone https://github.com:mcandre/meme.git %HOMEDRIVE%%HOMEPATH%\meme &^
+$ git clone https://github.com/mcandre/meme.git %HOMEDRIVE%%HOMEPATH%\meme &^
     mkdir %HOMEDRIVE%%HOMEPATH%\.memes &^
     reg import %HOMEDRIVE%%HOMEPATH\meme\cmd-enable-extensions.reg
 ```
