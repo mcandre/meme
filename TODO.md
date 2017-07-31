@@ -3,3 +3,4 @@
 * Test how rmdir /s /q behaves when targeting non-folder files in Command Prompt and PowerShell environments.
 * Test how meme behaves in native Unix environments and terminals, including bash, POSIX sh, zsh, ksh, and fish.
 * Test how meme behaves in PowerShell terminals on Unix hosts.
+* Provide bash, etc. aliases for convenience, so that `meme ...` expands to `make -f "$MEME_PATH" ...`
