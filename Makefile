@@ -1,89 +1,63 @@
-VERSION=0.0.1
+MEME_VERSION=0.0.1
 
-SEP_UNIX=/
-SEP_WINDOWS=\\
+#
+# Assume pure unix environment unless other strange environments are detected.
+#
+MEME_SHELL=/bin/sh
+MEME_SEP=/
+MEME_MKDIR=mkdir -p
+MEME_RM=rm -rf
+meme_home_command=echo $$HOME
 
-SEP=$(SEP_UNIX)
+# The presence/absence of MEME_CYGWIN is also useful for managing paths
+# in a platform agnostic way, especially when manipulating paths betweeen
+# different CLI applications.
 
-ifneq ($(filter %command.com,$(SHELL)),)
-	SEP=$(SEP_WINDOWS)
-endif
+# Windows host
+ifdef COMSPEC
+	# Cygwin (unix) guest
+	ifdef MSYSTEM
+		MEME_CYGWIN=yes
+	# Pure Windows guest
+	else
+		MEME_SHELL=cmd.exe
+		MEME_SEP=\\
+		MEME_MKDIR=mkdir
+		MEME_RM=rmdir /s /q
+		meme_home_command=echo %HOMEDRIVE%%HOMEPATH%
+	endif
+else
+	uname=$(shell uname -a)
 
-ifneq ($(filter %cmd.exe,$(SHELL)),)
-	SEP=$(SEP_WINDOWS)
-endif
-
-ifneq ($(filter %fish%,$(SHELL)),)
-	ifeq ($(OS),Windows_NT)
-		SEP=$(SEP_WINDOWS)
+	# Windows Linux Subsystem AKA bash on Ubuntu on Windows, another cygwin-like (unix) guest
+	ifneq ($(filter %Microsoft%,$(uname)),)
+		MEME_CYGWIN=yes
 	endif
 endif
 
-HOME_POSIX=$$HOME
-HOME_BASH=~
-HOME_CMD=%HOMEDRIVE%%HOMEPATH%
+# Fix epic fail with how segfaulting Chocolatey sh.exe interacts with GNU make.exe.
+SHELL=$(MEME_SHELL)
 
-HOME=$(HOME_POSIX)
+MEME_HOME=$(shell $(meme_home_command))
 
-ifneq ($(filter %fish%,$(SHELL)),)
-	HOME=$(HOME_BASH)
+meme_package_local=$(meme_package)
+
+ifeq ($(SHELL),cmd.exe)
+	meme_package_local=$(subst /,\\,$(package))
 endif
 
-ifneq ($(filter %command.com,$(SHELL)),)
-	HOME=$(HOME_CMD)
+meme_package_install_directory=$(MEME_HOME)$(MEME_SEP).memes$(MEME_SEP)$(meme_package_local)
+
+meme_check_package:
+ifndef meme_package
+	$(error Missing required make argument meme_package)
 endif
 
-ifneq ($(filter %cmd.exe,$(SHELL)),)
-	HOME=$(HOME_CMD)
-endif
+meme_install: meme_check_package
+	git clone https://github.com/$(meme_package).git $(meme_package_install_directory)
 
-ifneq ($(filter %powershell%,$(SHELL)),)
-	HOME=$(HOME_BASH)
-endif
+meme_uninstall: meme_check_package
+	-$(MEME_RM) $(meme_package_install_directory)
 
-UNAME_LOWER := $(shell uname -a | tr "[:upper:]" "[:lower:]")
-
-HOME_ABSOLUTE=$(realpath $(HOME))
-
-ifneq ($(filter %msys,$(UNAME_LOWER)),)
-	HOME_ABSOLUTE := $(shell cygpath -w $(HOME))
-endif
-
-RM_UNIX=rm -rf
-RM_CMD=del /sq
-RM_POWERSHELL=rm -r -Force
-
-RM=$(RM_UNIX)
-
-ifneq ($(filter %command.com,$(SHELL)),)
-	RM=$(RM_CMD)
-endif
-
-ifneq ($(filter %cmd.exe,$(SHELL)),)
-	RM=$(RM_CMD)
-endif
-
-ifneq ($(filter %fish%,$(SHELL)),)
-	ifeq ($(OS),Windows_NT)
-		RM=$(RM_CMD)
-	endif
-endif
-
-ifneq ($(filter %powershell%,$(SHELL)),)
-	RM=RM_POWERSHELL
-endif
-
-package_install_directory=$(HOME_ABSOLUTE)$(SEP).memes$(SEP)$(package)
-
-ifneq ($(filter %msys,$(UNAME_LOWER)),)
-  package_install_directory := $(shell cygpath -w $(HOME_POSIX)$(SEP_UNIX).memes$(SEP_UNIX)$(package))
-endif
-
-install:
-	git clone https://github.com/$(package).git $(package_install_directory)
-
-uninstall:
-	-@$(RM) $(package_install_directory)
-
-version:
-	@echo "$(VERSION)"
+meme_version:
+	echo "$(MEME_VERSION)"
