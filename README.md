@@ -1,4 +1,4 @@
-# meme: a package manager for Makefile's
+# meme: a package manager for GNUMakefile's
 
 It's pronounced "may-may"~
 
@@ -103,7 +103,7 @@ if ($?) { reg import ~/meme/cmd-enable-extensions.reg }
 
 # REQUIREMENTS
 
-* [make](https://www.gnu.org/software/make/)
+* [GNU make](https://www.gnu.org/software/make/)
 * [git](https://git-scm.com/)
 
 # NOTABLE ALTERNATIVES
